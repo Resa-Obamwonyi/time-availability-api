@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
+from timecalenderapp.views import TimeSlotsViewSet
+
+router = routers.DefaultRouter()
+router.register(r'timeslot', TimeSlotsViewSet)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
 ]
