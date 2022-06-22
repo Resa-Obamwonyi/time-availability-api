@@ -14,3 +14,4 @@ typed-ast==1.5.4
 typing-extensions==4.2.0
 zipp==3.8.0
 psycopg2-binary==2.9.3
+pytz==2022.1
