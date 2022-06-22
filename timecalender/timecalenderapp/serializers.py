@@ -1,4 +1,4 @@
-from models import TimeSlots
+from .models import TimeSlots
 from rest_framework import serializers
 
 
