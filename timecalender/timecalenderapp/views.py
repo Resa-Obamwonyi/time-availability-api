@@ -18,20 +18,24 @@ class TimeSlotsApi(APIView):
         time_array_data = request.data.get('time_slots')
         if not time_array_data:
             return Response(dict(error="invalid time slot data provided"), status=status.HTTP_400_BAD_REQUEST)
+
         # initialize empty array to store utc conversions
         utc_time_array = []
         for time_slot in time_array_data:
             utc_time = convert_to_utc(time_slot)
             utc_time_array.append(utc_time)
+            
         print("\n \n", utc_time_array)
-        
+
         # If "None" appears in array, there is no need to confirm overlapping time
         if None in utc_time_array:
-            return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_400_BAD_REQUEST)
+            return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_424_FAILED_DEPENDENCY)
 
-        # send all converted time array to a util to get the over lapping time
+        # otherwise send all converted time array to a util to get the over lapping time
         overlapping_time = get_overlapping_time(utc_time_array)
-        # return over lapping time or suitable error message
+
+        # return over lapping time or an error message
         if overlapping_time:
             return Response(dict(response=overlapping_time), status=status.HTTP_200_OK)
-        return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_424_FAILED_DEPENDENCY)
