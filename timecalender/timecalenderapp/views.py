@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .utils import convert_to_utc
+from .utils import convert_to_utc, get_overlapping_time
 
 class TimeSlotsApi(APIView):
     """
@@ -18,10 +18,16 @@ class TimeSlotsApi(APIView):
         time_array_data = request.data.get('time_slots')
         if not time_array_data:
             return Response(dict(error="invalid time slot data provided"), status=status.HTTP_400_BAD_REQUEST)
-        # initialize empty array to store gmt conversions
-        gmt_time_array = []
+        # initialize empty array to store utc conversions
+        utc_time_array = []
         for time_slot in time_array_data:
-            gmt_time = convert_to_utc(time_slot)
-            gmt_time_array.append(gmt_time)
+            utc_time = convert_to_utc(time_slot)
+            utc_time_array.append(utc_time)
+        print("\n \n", utc_time_array)
 
-        return Response(dict(response=gmt_time_array), status=status.HTTP_200_OK)
+        # send all converted time array to a util to get the over lapping time
+        overlapping_time = get_overlapping_time(utc_time_array)
+        # return over lapping time or suitable error message
+        if overlapping_time:
+            return Response(dict(response=overlapping_time), status=status.HTTP_200_OK)
+        return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_400_BAD_REQUEST)
