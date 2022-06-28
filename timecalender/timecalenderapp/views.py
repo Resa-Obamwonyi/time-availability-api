@@ -24,6 +24,10 @@ class TimeSlotsApi(APIView):
             utc_time = convert_to_utc(time_slot)
             utc_time_array.append(utc_time)
         print("\n \n", utc_time_array)
+        
+        # If "None" appears in array, there is no need to confirm overlapping time
+        if None in utc_time_array:
+            return Response(dict(error="Sorry, there are no overlapping time slots available"), status=status.HTTP_400_BAD_REQUEST)
 
         # send all converted time array to a util to get the over lapping time
         overlapping_time = get_overlapping_time(utc_time_array)

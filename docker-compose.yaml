@@ -10,7 +10,7 @@ services:
      - ./tmp/db:/var/lib/postgresql/data
  web:
    build: .
-   command: ["./wait-for-it.sh", python manage.py runserver 0.0.0.0:8000]
+   command: python manage.py runserver 0.0.0.0:8000
    volumes:
      - .:/timecalender
    ports:
