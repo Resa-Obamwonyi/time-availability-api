@@ -6,4 +6,4 @@ from rest_framework import serializers
 class TimeSlotSerializer(serializers.Serializer):
     class Meta:
         model = TimeSlots
-        fields = ['from_time', 'to', 'country_code']
+        fields = ["from_time", "to", "country_code"]
