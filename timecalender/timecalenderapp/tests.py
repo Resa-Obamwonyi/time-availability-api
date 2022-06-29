@@ -71,7 +71,7 @@ class TestTimeSlotApi(APITestCase):
         response = self.client.post(url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response.json,
+            response.json(),
             {
                 "response": [
                     {"from": "2022-05-04T09:00:00Z", "to": "2022-05-04T11:00:00Z"}
@@ -83,10 +83,10 @@ class TestTimeSlotApi(APITestCase):
         url = reverse("timeslot")
         response = self.client.post(url, self.holiday_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_424_FAILED_DEPENDENCY)
-        self.assertEqual(response.json, {"error": "It's a holiday in Asia/Singapore"})
+        self.assertEqual(response.json(), {"error": "It's a holiday in Asia/Singapore"})
 
     def test_get_overlapping_schedule_weekend(self):
         url = reverse("timeslot")
         response = self.client.post(url, self.weekend_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_424_FAILED_DEPENDENCY)
-        self.assertEqual(response.json, {"error": "It's a weekend in Asia/Singapore"})
+        self.assertEqual(response.json(), {"error": "It's a weekend in Asia/Singapore"})
