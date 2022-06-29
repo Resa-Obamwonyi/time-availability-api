@@ -1,5 +1,5 @@
 # Time Availabilty API
-- Working internationally comes with its own set of challenges, among them the challenge of figuring out when people are available. This API can be used to calculate the best meeting slots across time zones
+- Working internationally comes with its own set of challenges, among them is the challenge of figuring out when people are available. This API can be used to calculate the best meeting slots across time zones
 
 ## How to use and Test this application
 - Clone or download the repo. In the root folder terminal, run the command `make all` to start up the program server, and run migrations and tests.
