@@ -2,7 +2,7 @@
 - Working internationally comes with its own set of challenges, among them is the challenge of figuring out when people are available. This API can be used to calculate the best meeting slots across time zones
 
 ## How to use and Test this application
-- Clone or download the repo. In the root folder terminal, run the command `make all` to start up the program server, and run migrations and tests.
+- Clone or download the repo. In the root folder terminal, run the command `make start` to start up the program server, and run migrations.
 - To test the API visit `http://127.0.0.1:8000/api/timeslot` and test with a sample data. An example is shown below:
 
 
@@ -10,7 +10,8 @@ https://user-images.githubusercontent.com/51092098/176506710-6ae5adb7-bafa-4401-
 
 
 - You can also test the API route above via postman. 
-- To run tests only, run `docker-compose exec web python manage.py test`
+- To run functions tests only, run `make test`
+- To shut down the container, run `make down`
 
 ## Steps taken to reduce latency
 - I avoided the use of third-party APIs, as this could generally slow down response time.
