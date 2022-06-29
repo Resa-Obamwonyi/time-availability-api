@@ -1,5 +1,3 @@
-from .serializers import TimeSlotSerializer
-from .models import TimeSlots
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,10 +20,11 @@ class TimeSlotsApi(APIView):
         # initialize empty array to store utc conversions
         utc_time_array = []
         for time_slot in time_array_data:
-            utc_time = convert_to_utc(time_slot)
-            utc_time_array.append(utc_time)
-            
-        print("\n \n", utc_time_array)
+            utc_resp = convert_to_utc(time_slot)
+            if type(utc_resp) == list:
+                utc_time_array.append(utc_resp)
+            else:
+                return Response(dict(error=utc_resp), status=status.HTTP_424_FAILED_DEPENDENCY)
 
         # If "None" appears in array, there is no need to confirm overlapping time
         if None in utc_time_array:

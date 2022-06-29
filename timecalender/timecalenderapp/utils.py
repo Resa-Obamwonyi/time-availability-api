@@ -1,3 +1,4 @@
+from typing import overload
 import pytz
 import holidays
 import iso8601
@@ -12,45 +13,52 @@ def convert_to_utc(time_slot):
     from_time = iso8601.parse_date(time_slot['from'].replace(" ", ""))
     to_time = iso8601.parse_date(time_slot['to'].replace(" ", ""))
     # get location
-    location =  pytz.country_timezones[country_code]
+    location =  pytz.country_timezones[country_code][0]
     # print(location, from_time)
 
     #confirm if day is holiday or weekend in location before proceeding
     is_weekend = from_time.weekday() > 4
     is_holiday = holidays.country_holidays(country_code).get(from_time)
-    if is_weekend or is_holiday:
-        return None
+
+    if is_weekend:
+        msg =  f"It's a weekend in {location}"
+        return msg
+
+    if is_holiday:
+        msg = f"It's a holiday in {location}"
+        return msg
 
     #if not holiday or weekend, convert to utc and return the utc time slots
     dt_from = from_time.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     dt_to = to_time.astimezone(pytz.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    # print("\n \n", dt_from, dt_to)
     return [dt_from, dt_to]
+
 
 # function gets overlapping time slots based on data provided
 def get_overlapping_time(slot_array):
+    # sort the time slots
     slot_array.sort()
+    # get first time slot as base case
     overlap = [slot_array[0]]
+    # loop through and update start time or end time based on comparisons below
     for interval in slot_array[1:]: 
-        if overlap[-1][0] < interval[0]:
+        # if base case start time is lesser or equal to interval start time which is lesser or equal to base case end time
+        if overlap[-1][0] <= interval[0] <= overlap[-1][-1]:
+            # update base case start time to new interval start time
             overlap[-1][0] = interval[0]
-        elif overlap[-1][1] > interval[1]:
-            overlap[-1][1] = interval[1]
-        else:
-            pass
         
-    print("\n \n", overlap)
+        # if base case end time is greater or equal to interval end time
+        if overlap[-1][1] >= interval[1]:
+            # update base case end time to new interval end time
+            overlap[-1][1] = interval[1]
+
+    # format response appropriately
+    response = []
+    for overlap_time in overlap:
+        new_dict = {"from":overlap_time[0], "to":overlap_time[1]}
+        response.append(new_dict)
+
+    # return array of overlap
+    return response
     
-    # start_time = None
-    # end_time = None
-    # for slot in range(len(slot_array)):
-    #     start_time =  slot_array[slot][0]
-    #     end_time = slot_array[slot][1]
-
-    #     if start_time:
-    #         pass
-
-#[['T01:00:00Z', 'T09:00:00Z'], =====> 1 - 9
-# ['T08:00:00Z', 'T16:00:00Z'], =====> 8 - 16
-# ['T03:30:00Z', 'T11:30:00Z']] =====> 3:30 - 11:30  |  8, 9
