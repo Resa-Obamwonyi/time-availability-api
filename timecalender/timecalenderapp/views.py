@@ -42,6 +42,7 @@ class TimeSlotsApi(APIView):
 
         # otherwise send all converted time array to a util to get the over lapping time
         overlapping_time = get_overlapping_time(utc_time_array)
+        print("Testerr")
 
         # return over lapping time or an error message
         if overlapping_time:
